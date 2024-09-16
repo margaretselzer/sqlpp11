@@ -1,2 +1,5 @@
+.vscode/*
 .idea
 CMakeLists.txt.user
+build/*
+Testing/*

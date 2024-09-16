@@ -1,0 +1,128 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 22,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS_DEBUG_INIT": "$env{CXX_FLAGS} $env{CXX_WARNINGS} $env{CXX_OPT}",
+                "CMAKE_CXX_FLAGS_RELEASE_INIT": "$env{CXX_FLAGS} $env{CXX_WARNINGS} $env{CXX_OPT}",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            }
+        },
+        {
+            "name": "windows-base",
+            "hidden": true,
+            "inherits": "base",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "environment": {
+                "CXX_WARNINGS": "/W4 /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            }
+        },
+        {
+            "name": "windows-debug",
+            "displayName": "Debug",
+            "inherits": "windows-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "windows-release",
+            "displayName": "Release",
+            "inherits": "windows-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "linux-base",
+            "hidden": true,
+            "inherits": "base",
+            "generator": "Ninja",
+            "toolchainFile": "/home/eegymar/source/FW_IUDC_CTRL/iudc_ctrl/lib/CommonUtils/3rdparty/vcpkg/scripts/buildsystems/vcpkg.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/install/${presetName}",
+            "environment": {
+                "CXX_WARNINGS": "-Wall -Wextra",
+                "CXX_OPT": "-fdiagnostics-color=auto"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Debug",
+            "description": "Default Linux configuration using gcc and ninja",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Release",
+            "description": "Default Linux configuration using gcc and ninja",
+            "inherits": "linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "linux-development-release",
+            "displayName": "Development Release",
+            "description": "Default Linux configuration using gcc and ninja",
+            "inherits": "linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "ReleaseWithDebInfo"
+            }
+        },
+        {
+            "name": "linux-debug-clang",
+            "displayName": "Debug clang",
+            "description": "Linux configuration using clang as compiler",
+            "inherits": "linux-debug",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "linux-debug",
+            "description": "Tests using the linux debug preset",
+            "displayName": "Linux Debug",
+            "configurePreset": "linux-debug"
+        }
+    ]
+}
